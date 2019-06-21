@@ -1,0 +1,16 @@
+[package]
+name = "wasm-xbindgen"
+version = "0.0.1"
+authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
+edition = "2018"
+
+[dependencies]
+structopt = "0.2.16"
+wasm-xbindgen-decoder-common = { path = "lib/decoder-common" }
+wasm-xbindgen-encoder = { path = "lib/encoder" }
+
+[workspace]
+members = [
+        "lib/decoder-common",
+        "lib/encoder"
+]

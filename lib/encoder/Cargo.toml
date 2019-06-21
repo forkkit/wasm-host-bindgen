@@ -1,0 +1,9 @@
+[package]
+name = "wasm-xbindgen-encoder"
+version = "0.0.1"
+authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
+edition = "2018"
+
+[dependencies]
+wasm-webidl-bindings = { git = "https://github.com/Hywan/wasm-webidl-bindings", branch = "feat-issue-2" }
+walrus = "0.8.0"
