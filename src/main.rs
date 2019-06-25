@@ -7,17 +7,19 @@ use structopt::StructOpt;
 use wasm_xbindgen_decoder_common as common;
 use wasm_xbindgen_encoder as encoder;
 
-fn main() {
+fn main() -> Result<(), &'static str> {
     match Commands::from_args() {
         Commands::Decode(command) => {
             let options: common::options::Options = command.into();
-            println!("{:?}", options)
+            println!("{:#?}", options);
         }
 
         Commands::Encode(command) => {
             let options: encoder::options::Options = command.into();
-            println!("{:?}\n\n", options);
-            encoder::encode(&options);
+            println!("{:#?}", options);
+            encoder::encode(&options)?;
         }
     }
+
+    Ok(())
 }
