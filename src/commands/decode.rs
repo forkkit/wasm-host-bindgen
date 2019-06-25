@@ -49,5 +49,6 @@ impl Into<common::options::Options> for Decode {
             self.verbose,
             self.output,
         )
+        .unwrap()
     }
 }

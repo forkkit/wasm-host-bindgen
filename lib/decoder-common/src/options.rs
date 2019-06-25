@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use walrus::Module;
 
 #[derive(Debug)]
 pub enum Target {
@@ -7,31 +8,38 @@ pub enum Target {
 
 #[derive(Debug)]
 pub struct Options {
-    /// The WebAssembly module (`.wasm` file) containing the bindings.
-    webassembly_module: PathBuf,
+    /// The WebAssembly file name (`.wasm` file) containing the bindings.
+    pub webassembly_module_file: PathBuf,
+
+    /// The WebAssembly module that contains the bindings.
+    pub webassembly_module: Module,
 
     /// The target for which the bindings are decoded.
-    target: Target,
+    pub target: Target,
 
     /// Whether the output is verbose.
-    verbose: bool,
+    pub verbose: bool,
 
     /// The output file.
-    output: Option<PathBuf>,
+    pub output: Option<PathBuf>,
 }
 
 impl Options {
     pub fn new(
-        webassembly_module: PathBuf,
+        webassembly_module_file: PathBuf,
         target: Target,
         verbose: bool,
         output: Option<PathBuf>,
-    ) -> Self {
-        Self {
-            webassembly_module,
+    ) -> Result<Self, &'static str> {
+        Ok(Self {
+            webassembly_module_file: webassembly_module_file.clone(),
+            webassembly_module: {
+                walrus::Module::from_file(webassembly_module_file)
+                    .map_err(|_| "Invalid WebAssembly module.")?
+            },
             target,
             verbose,
             output,
-        }
+        })
     }
 }

@@ -51,7 +51,7 @@ impl Options {
 
                 buffer
             },
-            verbose: verbose,
+            verbose,
             output_file: output_file.unwrap_or_else(|| {
                 let mut path = webassembly_module_file;
                 path.set_extension("bound.wasm");

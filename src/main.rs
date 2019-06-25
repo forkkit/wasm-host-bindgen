@@ -4,20 +4,27 @@ mod commands;
 
 use commands::Commands;
 use structopt::StructOpt;
-use wasm_xbindgen_decoder_common as common;
-use wasm_xbindgen_encoder as encoder;
+use wasm_xbindgen_decoder_c as c;
+use wasm_xbindgen_decoder_common::{
+    decode,
+    options::{Options as DecoderOptions, Target},
+};
+use wasm_xbindgen_encoder::encode;
 
 fn main() -> Result<(), &'static str> {
     match Commands::from_args() {
         Commands::Decode(command) => {
-            let options: common::options::Options = command.into();
-            println!("{:#?}", options);
+            let options: DecoderOptions = command.into();
+
+            match options.target {
+                Target::C => decode(options, c::Decoder::new())?,
+            };
         }
 
         Commands::Encode(command) => {
-            let options: encoder::options::Options = command.into();
+            let options = command.into();
             println!("{:#?}", options);
-            encoder::encode(&options)?;
+            encode(&options)?;
         }
     }
 

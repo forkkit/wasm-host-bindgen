@@ -918,13 +918,24 @@ name = "wasm-xbindgen"
 version = "0.0.1"
 dependencies = [
  "structopt 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wasm-xbindgen-decoder-c 0.0.1",
  "wasm-xbindgen-decoder-common 0.0.1",
  "wasm-xbindgen-encoder 0.0.1",
 ]
 
 [[package]]
+name = "wasm-xbindgen-decoder-c"
+version = "0.0.1"
+dependencies = [
+ "wasm-xbindgen-decoder-common 0.0.1",
+]
+
+[[package]]
 name = "wasm-xbindgen-decoder-common"
 version = "0.0.1"
+dependencies = [
+ "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "wasm-xbindgen-encoder"
