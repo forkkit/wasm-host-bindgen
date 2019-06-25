@@ -15,9 +15,11 @@ where
     decoder.decode(options)
 }
 
-pub fn get_binding_custom_section(module: &Module) -> Option<&dyn CustomSection> {
+pub const BINDING_SECTION_NAME: &'static str = "webidl-bindings";
+
+pub fn get_binding_section(module: &Module) -> Option<&dyn CustomSection> {
     module.customs.iter().find_map(|(_, section)| {
-        if section.name() == "webidl-bindings" {
+        if section.name() == BINDING_SECTION_NAME {
             Some(section)
         } else {
             None
