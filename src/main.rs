@@ -6,8 +6,8 @@ use commands::Commands;
 use structopt::StructOpt;
 use wasm_xbindgen_decoder_c as c;
 use wasm_xbindgen_decoder_common::{
+    decode,
     options::{Options as DecoderOptions, Target},
-    Decoder,
 };
 use wasm_xbindgen_encoder::encode;
 
@@ -17,7 +17,7 @@ fn main() -> Result<(), &'static str> {
             let options: DecoderOptions = command.into();
 
             match options.target {
-                Target::C => c::Decoder::decode(options)?,
+                Target::C => decode::<c::Decoder>(options)?,
             };
         }
 
