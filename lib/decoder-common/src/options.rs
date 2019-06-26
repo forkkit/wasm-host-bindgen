@@ -1,5 +1,5 @@
+use crate::module::Module;
 use std::path::PathBuf;
-use walrus::Module;
 
 #[derive(Debug)]
 pub enum Target {
@@ -11,7 +11,7 @@ pub struct Options {
     /// The WebAssembly file name (`.wasm` file) containing the bindings.
     pub webassembly_module_file: PathBuf,
 
-    /// The WebAssembly module that contains the bindings.
+    /// The WebAssembly module, ready to be parsed.
     pub webassembly_module: Module,
 
     /// The target for which the bindings are decoded.
@@ -31,12 +31,9 @@ impl Options {
         verbose: bool,
         output: Option<PathBuf>,
     ) -> Result<Self, &'static str> {
-        Ok(Self {
+        Ok(Options {
             webassembly_module_file: webassembly_module_file.clone(),
-            webassembly_module: {
-                walrus::Module::from_file(webassembly_module_file)
-                    .map_err(|_| "Invalid WebAssembly module.")?
-            },
+            webassembly_module: Module::new(&webassembly_module_file)?,
             target,
             verbose,
             output,

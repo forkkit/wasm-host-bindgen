@@ -1,3 +1,5 @@
+#![deny(warnings)]
+
 pub mod options;
 
 use options::Options;
