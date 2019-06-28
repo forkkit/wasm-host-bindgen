@@ -5,7 +5,7 @@ use wasm_xbindgen_decoder_common::{
     options::Options,
     walrus::{FunctionKind, Module},
     wasm_webidl_bindings::ast::{
-        FunctionBindingId, ImportBinding, WebidlBindings, WebidlFunction, WebidlTypeId,
+        ExportBinding, FunctionBindingId, WebidlBindings, WebidlFunction, WebidlTypeId,
         WebidlTypeRef,
     },
 };
@@ -29,7 +29,7 @@ fn decode(module: &Module, webidl_bindings: &WebidlBindings) {
     for bind in binds.iter().filter_map(|index| binds.get(*index)) {
         let wasm_function = module.funcs.get(bind.func);
         let function_binding = bindings
-            .get::<ImportBinding>(ImportBinding::wrap(bind.binding))
+            .get::<ExportBinding>(ExportBinding::wrap(bind.binding))
             .expect("Web IDL AST is malformed.");
 
         let function_binding_wasm_type = module.types.get(function_binding.wasm_ty);

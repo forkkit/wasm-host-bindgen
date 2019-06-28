@@ -1,10 +1,9 @@
-type $log_message_webidl_type
-    (func
-      (method any)
-      (param ByteString Uint8Array))
+type $hello_webidl_type
+  (func
+    (result ByteString))
 
-func-binding $log_message_webidl_binding import 0 ;$log_message_wasm_type; $log_message_webidl_type
-    (param
-        (utf8-cstr ByteString 0))
+func-binding $hello_webidl_binding export 0 ;$hello_wasm_type; $hello_webidl_type
+  (result
+    (utf8-cstr ;targeted object =; ByteString ;offset =; 0))
 
-bind 0 $log_message_webidl_binding
+bind 0 $hello_webidl_binding
