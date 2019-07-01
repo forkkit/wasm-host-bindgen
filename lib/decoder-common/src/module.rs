@@ -1,5 +1,5 @@
 use std::{fs::File, io::prelude::*, path::PathBuf};
-use walrus::{IdsToIndices, Module as WalrusModule, ModuleConfig};
+use walrus::{Module as WalrusModule, ModuleConfig};
 use wasm_webidl_bindings::{ast::WebidlBindings, binary::decode};
 
 #[derive(Debug)]
@@ -42,8 +42,8 @@ impl Module {
                     })
                     .unwrap();
 
-                let data = section.data(&IdsToIndices::default()).into_owned();
-                let bindings = decode(indices_to_ids, &mut data.as_slice()).unwrap();
+                let data = section.data(&Default::default());
+                let bindings = decode(indices_to_ids, &data).unwrap();
 
                 handler(&module, &bindings);
 
