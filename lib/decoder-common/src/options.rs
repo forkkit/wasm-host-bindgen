@@ -20,8 +20,8 @@ pub struct Options {
     /// Whether the output is verbose.
     pub verbose: bool,
 
-    /// The output file.
-    pub output: Option<PathBuf>,
+    /// The output that will receive the result.
+    pub output: PathBuf,
 }
 
 impl Options {
@@ -29,7 +29,7 @@ impl Options {
         webassembly_module_file: PathBuf,
         target: Target,
         verbose: bool,
-        output: Option<PathBuf>,
+        output: PathBuf,
     ) -> Result<Self, &'static str> {
         Ok(Options {
             webassembly_module_file: webassembly_module_file.clone(),

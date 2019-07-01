@@ -24,9 +24,9 @@ impl Module {
         })
     }
 
-    pub fn parse<F>(mut self, handler: F)
+    pub fn parse<Function>(mut self, handler: Function, output: PathBuf)
     where
-        F: 'static + Fn(&WalrusModule, &WebidlBindings) + Send + Sync,
+        Function: 'static + Fn(&WalrusModule, &WebidlBindings, &File) + Send + Sync,
     {
         self.module_configuration
             .on_parse(move |module, indices_to_ids| {
@@ -45,7 +45,9 @@ impl Module {
                 let data = section.data(&Default::default());
                 let bindings = decode(indices_to_ids, &data).unwrap();
 
-                handler(&module, &bindings);
+                let mut writer = Box::new(File::create(output.clone()).unwrap());
+
+                handler(&module, &bindings, &mut writer);
 
                 Ok(())
             });

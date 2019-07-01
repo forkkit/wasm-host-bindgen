@@ -30,7 +30,7 @@ pub struct Decode {
 
     /// Defines the output file.
     #[structopt(short = "o", long = "output", parse(from_os_str))]
-    output: Option<PathBuf>,
+    output: PathBuf,
 }
 
 impl Into<common::options::Target> for Target {
