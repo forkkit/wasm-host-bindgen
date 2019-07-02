@@ -129,6 +129,24 @@ impl Codegen for ExportBinding {
         };
 
         // Check that the `type` and the `func-binding` types match.
+        //
+        // For instance, in the following code, we have to check that
+        // `$hello_webidl_type` is a function that returns
+        // `ByteString`, _and_ that `$hello_webidl_binding` is a
+        // function binding that returns a `ByteString` too (in this
+        // case, that `utf8-cstr` returns a `ByteString`).
+        //
+        // ```
+        // type $hello_webidl_type
+        //   (func
+        //     (result ByteString))
+        //
+        // func-binding $hello_webidl_binding export $hello_wasm_type $hello_webidl_type
+        //   (result
+        //     (utf8-cstr ByteString 0))
+        // ```
+        //
+        // TODO: This type checker step should land in `wasm-webidl-bindings` directly.
         match (export_type, &self.result.bindings[0]) {
             (
                 Some(WebidlFunction {
@@ -141,7 +159,7 @@ impl Codegen for ExportBinding {
                 }),
             ) => {
                 if left_type != right_type {
-                    panic!("Type mimatch between `type` and `func-binding`.");
+                    panic!(format!("Type mimatch between `type` and `func-binding`: `{left:?}` is not equal to `{right:?}`", left = left_type, right = right_type));
                 }
             }
 
