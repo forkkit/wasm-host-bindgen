@@ -25,7 +25,7 @@ impl common::Decoder for Decoder {
 fn decode(module: &Module, webidl_bindings: &WebidlBindings, mut writer: &File) {
     let binds = &webidl_bindings.binds;
 
-    for bind in binds.iter().filter_map(|index| binds.get(*index)) {
+    for (_, bind) in binds.iter() {
         bind.codegen(&mut CodegenContext {
             module,
             writer: &mut writer,
@@ -62,10 +62,6 @@ impl<'a> CodegenContext<'a> {
 impl Codegen for Bind {
     fn codegen(&self, context: &mut CodegenContext) {
         let module = context.module;
-
-        /*
-        // Get the WebIDL function type.
-         */
 
         // Bound Wasm function.
         let wasm_function = context.get_function(self.func);

@@ -6,4 +6,4 @@ edition = "2018"
 
 [dependencies]
 walrus = "0.8.0"
-wasm-webidl-bindings = { git = "https://github.com/Hywan/wasm-webidl-bindings", branch = "feat-ast-iter" }
+wasm-webidl-bindings = { git = "https://github.com/rustwasm/wasm-webidl-bindings", branch = "master" }
