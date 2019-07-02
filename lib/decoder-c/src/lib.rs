@@ -8,7 +8,7 @@ use wasm_xbindgen_decoder_common::{
     wasm_webidl_bindings::ast::{
         Bind, ExportBinding, FunctionBindingId, FunctionBindings, ImportBinding,
         OutgoingBindingExpression, OutgoingBindingExpressionUtf8CStr, OutgoingBindingMap,
-        WebidlBindings, WebidlFunction, WebidlTypeId, WebidlTypeRef, WebidlTypes,
+        WebidlBindings, WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
     },
 };
 
@@ -114,13 +114,24 @@ impl Codegen for ExportBinding {
         assert!(self.params.bindings.is_empty());
         assert!(self.result.bindings.len() == 1);
 
-        dbg!(self);
+        let wasm_function_id = context.get_function(context.bind.func).id();
+        let export_name = context
+            .module
+            .exports
+            .iter()
+            .find(|export| match export.item {
+                ExportItem::Function(function_id) if function_id == wasm_function_id => true,
+                _ => false,
+            })
+            .map(|export| &export.name)
+            .expect("Bound exported function is not found.");
 
         // Get the `type` statement that represents the Web IDL binding function.
-        let export_type = match self.webidl_ty {
+        let webidl_output_type = match self.webidl_ty {
             WebidlTypeRef::Id(id) => context
                 .types
-                .get::<WebidlFunction>(WebidlFunction::wrap(id)),
+                .get::<WebidlFunction>(WebidlFunction::wrap(id))
+                .and_then(|webidl_type| webidl_type.result.as_ref()),
             _ => unimplemented!(),
         };
 
@@ -143,12 +154,9 @@ impl Codegen for ExportBinding {
         // ```
         //
         // TODO: This type checker step should land in `wasm-webidl-bindings` directly.
-        match (export_type, &self.result.bindings[0]) {
+        match (webidl_output_type, &self.result.bindings[0]) {
             (
-                Some(WebidlFunction {
-                    result: Some(left_type),
-                    ..
-                }),
+                Some(left_type),
                 OutgoingBindingExpression::Utf8CStr(OutgoingBindingExpressionUtf8CStr {
                     ty: right_type,
                     ..
@@ -162,32 +170,60 @@ impl Codegen for ExportBinding {
             _ => unimplemented!(),
         };
 
-        let wasm_function_id = context.get_function(context.bind.func).id();
-        let wasm_export = context
-            .module
-            .exports
-            .iter()
-            .find(|export| match export.item {
-                ExportItem::Function(function_id) if function_id == wasm_function_id => true,
-                _ => false,
-            })
-            .expect("Bound exported function is not found.");
+        let wasm_output_type = match context.get_type(self.wasm_ty).results() {
+            &[first] => Some(first),
+            &[] => None,
+            slice => Some(slice[0]),
+        };
 
-        dbg!(wasm_export);
+        match wasm_output_type {
+            Some(output_type) => write!(
+                context.writer,
+                r#"
+export_{name} = |...arguments| {{
+    let output: {output_type} = original_export_{name}(arguments...);
+"#,
+                name = export_name,
+                output_type = output_type
+            )
+            .unwrap(),
+            _ => unimplemented!(),
+        };
 
-        write!(
-            context.writer,
-            r#"
-export_{name} = |instance: Instance| {{
-    let pointer "#,
-            name = wasm_export.name
-        )
-        .unwrap();
+        &self.result.bindings[0].codegen(context);
     }
 }
 
-impl Codegen for OutgoingBindingMap {
+impl Codegen for OutgoingBindingExpression {
     fn codegen(&self, context: &mut CodegenContext) {
-        write!(context.writer, "hello world").unwrap();
+        match self {
+            // utf8-cstr
+            OutgoingBindingExpression::Utf8CStr(OutgoingBindingExpressionUtf8CStr {
+                ty,
+                offset,
+            }) => match ty {
+                WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => write!(
+                    context.writer,
+                    r#"
+    let byte_string = ByteString::new();
+    let offset = output + {offset};
+
+    match memory[offset..].position(|b| b != 0) {{
+        Some(end_offset) => ByteString::from(memory[offset..end_offset]),
+        None => ByteSTring::from(memory[offset..]),
+    }}
+
+    byte_string
+}}
+"#,
+                    offset = offset
+                )
+                .unwrap(),
+
+                _ => unimplemented!(),
+            },
+
+            _ => unimplemented!(),
+        };
     }
 }
