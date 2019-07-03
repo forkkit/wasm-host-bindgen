@@ -6,13 +6,13 @@ edition = "2018"
 
 [dependencies]
 structopt = "0.2.16"
-wasm-xbindgen-decoder-c = { path = "lib/decoder-c" }
 wasm-xbindgen-decoder-common = { path = "lib/decoder-common" }
+wasm-xbindgen-decoder-python = { path = "lib/decoder-python" }
 wasm-xbindgen-encoder = { path = "lib/encoder" }
 
 [workspace]
 members = [
-        "lib/decoder-c",
         "lib/decoder-common",
+        "lib/decoder-python",
         "lib/encoder"
 ]

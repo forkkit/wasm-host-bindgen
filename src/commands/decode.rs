@@ -5,7 +5,7 @@ use wasm_xbindgen_decoder_common as common;
 arg_enum! {
     #[derive(PartialEq, Debug)]
     pub enum Target {
-        C,
+        Python,
     }
 }
 
@@ -36,7 +36,7 @@ pub struct Decode {
 impl Into<common::options::Target> for Target {
     fn into(self) -> common::options::Target {
         match self {
-            Target::C => common::options::Target::C,
+            Target::Python => common::options::Target::Python,
         }
     }
 }

@@ -210,7 +210,7 @@ impl Codegen for OutgoingBindingExpression {
 
     match memory[offset..].position(|b| b != 0) {{
         Some(end_offset) => ByteString::from(memory[offset..end_offset]),
-        None => ByteSTring::from(memory[offset..]),
+        None => ByteString::from(memory[offset..]),
     }}
 
     byte_string

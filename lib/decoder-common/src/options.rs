@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 #[derive(Debug)]
 pub enum Target {
-    C,
+    Python,
 }
 
 #[derive(Debug)]
