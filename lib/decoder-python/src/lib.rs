@@ -31,12 +31,11 @@ fn decode(prelude: bool, module: &Module, webidl_bindings: &WebidlBindings, mut 
         write!(writer, "{}", PRELUDE).unwrap();
     }
 
-    write!(
+    writeln!(
         writer,
         r#"
 export_builders = {{}};
-import_builders = {{}};
-"#
+import_builders = {{}};"#
     )
     .unwrap();
 
@@ -196,28 +195,26 @@ impl Codegen for ExportBinding {
                 .expect("Bound exported function is not found.")
         };
 
-        write!(
+        writeln!(
             context.writer,
             r#"
 def export_{name}_builder(instance):
     def export_{name}(*arguments):
         # output: {output_type}
-        output = instance.exports.{name}(*arguments)
-"#,
+        output = instance.exports.{name}(*arguments)"#,
             name = export_name,
             output_type = wasm_output_type
         )
         .unwrap();
 
-        &self.result.bindings[0].codegen(context);
+        self.result.bindings[0].codegen(context);
 
-        write!(
+        writeln!(
             context.writer,
             r#"
     return export_{name}
 
-export_builders['{name}'] = export_{name}_builder
-"#,
+export_builders['{name}'] = export_{name}_builder"#,
             name = export_name
         )
         .unwrap();
@@ -232,7 +229,7 @@ impl Codegen for OutgoingBindingExpression {
                 ty,
                 offset: offset_index,
             }) => match ty {
-                WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => write!(
+                WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => writeln!(
                     context.writer,
                     r#"
         offset_index = {offset_index}
@@ -253,8 +250,7 @@ impl Codegen for OutgoingBindingExpression {
             bytes.append(byte)
             nth += 1
 
-        return bytestring(bytes)
-"#,
+        return bytestring(bytes)"#,
                     offset_index = offset_index
                 )
                 .unwrap(),

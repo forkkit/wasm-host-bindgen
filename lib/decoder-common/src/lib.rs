@@ -18,4 +18,4 @@ where
     D::decode(&options)
 }
 
-pub const BINDING_SECTION_NAME: &'static str = "webidl-bindings";
+pub const BINDING_SECTION_NAME: &str = "webidl-bindings";
