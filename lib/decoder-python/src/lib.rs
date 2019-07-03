@@ -31,6 +31,15 @@ fn decode(prelude: bool, module: &Module, webidl_bindings: &WebidlBindings, mut 
         write!(writer, "{}", PRELUDE).unwrap();
     }
 
+    write!(
+        writer,
+        r#"
+export_builders = {{}};
+import_builders = {{}};
+"#
+    )
+    .unwrap();
+
     let binds = &webidl_bindings.binds;
 
     for (_, bind) in binds.iter() {
@@ -205,6 +214,8 @@ def export_{name}_builder(instance):
                     context.writer,
                     r#"
     return export_{name}
+
+export_builders['{name}'] = export_{name}_builder
 "#,
                     name = export_name
                 )
