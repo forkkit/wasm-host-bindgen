@@ -1,3 +1,4 @@
+use crate::options::Options;
 use std::{fs::File, io::prelude::*, path::PathBuf};
 use walrus::{Module as WalrusModule, ModuleConfig};
 use wasm_webidl_bindings::{ast::WebidlBindings, binary::decode};
@@ -24,10 +25,13 @@ impl Module {
         })
     }
 
-    pub fn parse<Function>(mut self, handler: Function, output: PathBuf)
+    pub fn parse<Function>(mut self, handler: Function, options: &Options)
     where
-        Function: 'static + Fn(&WalrusModule, &WebidlBindings, &File) + Send + Sync,
+        Function: 'static + Fn(bool, &WalrusModule, &WebidlBindings, &File) + Send + Sync,
     {
+        let output = options.output.clone();
+        let prelude = options.prelude;
+
         self.module_configuration
             .on_parse(move |module, indices_to_ids| {
                 let section = module
@@ -45,9 +49,9 @@ impl Module {
                 let data = section.data(&Default::default());
                 let bindings = decode(indices_to_ids, &data).unwrap();
 
-                let mut writer = Box::new(File::create(output.clone()).unwrap());
+                let mut writer = File::create(output.clone()).unwrap();
 
-                handler(&module, &bindings, &mut writer);
+                handler(prelude, &module, &bindings, &mut writer);
 
                 Ok(())
             });

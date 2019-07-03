@@ -3,26 +3,34 @@
 use std::{fs::File, io::Write};
 use wasm_xbindgen_decoder_common::{
     self as common,
+    module::Module as CommonModule,
     options::Options,
     walrus::{ExportItem, Function, FunctionId, FunctionKind, LocalFunction, Module, Type, TypeId},
     wasm_webidl_bindings::ast::{
         Bind, ExportBinding, FunctionBindingId, FunctionBindings, ImportBinding,
-        OutgoingBindingExpression, OutgoingBindingExpressionUtf8CStr, OutgoingBindingMap,
-        WebidlBindings, WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
+        OutgoingBindingExpression, OutgoingBindingExpressionUtf8CStr, WebidlBindings,
+        WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
     },
 };
 
 pub struct Decoder;
 
 impl common::Decoder for Decoder {
-    fn decode(options: Options) -> Result<(), &'static str> {
-        options.webassembly_module.parse(decode, options.output);
+    fn decode(options: &Options) -> Result<(), &'static str> {
+        let module = CommonModule::new(&options.webassembly_module_file)?;
+        module.parse(decode, &options);
 
         Ok(())
     }
 }
 
-fn decode(module: &Module, webidl_bindings: &WebidlBindings, mut writer: &File) {
+const PRELUDE: &str = include_str!("./prelude.py");
+
+fn decode(prelude: bool, module: &Module, webidl_bindings: &WebidlBindings, mut writer: &File) {
+    if prelude {
+        write!(writer, "{}", PRELUDE).unwrap();
+    }
+
     let binds = &webidl_bindings.binds;
 
     for (_, bind) in binds.iter() {

@@ -24,6 +24,10 @@ pub struct Decode {
     )]
     target: Target,
 
+    /// Generates the prelude, i.e. the Web IDL types for the target.
+    #[structopt(short = "p", long = "prelude")]
+    prelude: bool,
+
     /// Uses verbose output.
     #[structopt(short = "v", long = "verbose")]
     verbose: bool,
@@ -46,6 +50,7 @@ impl Into<common::options::Options> for Decode {
         common::options::Options::new(
             self.webassembly_module_file,
             self.target.into(),
+            self.prelude,
             self.verbose,
             self.output,
         )

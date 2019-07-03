@@ -1,4 +1,3 @@
-use crate::module::Module;
 use std::path::PathBuf;
 
 #[derive(Debug)]
@@ -11,11 +10,12 @@ pub struct Options {
     /// The WebAssembly file name (`.wasm` file) containing the bindings.
     pub webassembly_module_file: PathBuf,
 
-    /// The WebAssembly module, ready to be parsed.
-    pub webassembly_module: Module,
-
     /// The target for which the bindings are decoded.
     pub target: Target,
+
+    /// Whether the output must include the prelude, i.e. the Web IDL
+    /// types API.
+    pub prelude: bool,
 
     /// Whether the output is verbose.
     pub verbose: bool,
@@ -28,13 +28,14 @@ impl Options {
     pub fn new(
         webassembly_module_file: PathBuf,
         target: Target,
+        prelude: bool,
         verbose: bool,
         output: PathBuf,
     ) -> Result<Self, &'static str> {
         Ok(Options {
             webassembly_module_file: webassembly_module_file.clone(),
-            webassembly_module: Module::new(&webassembly_module_file)?,
             target,
+            prelude,
             verbose,
             output,
         })

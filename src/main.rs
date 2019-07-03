@@ -17,7 +17,7 @@ fn main() -> Result<(), &'static str> {
             let options: DecoderOptions = command.into();
 
             match options.target {
-                Target::Python => decode::<python::Decoder>(options)?,
+                Target::Python => decode::<python::Decoder>(&options)?,
             };
         }
 
