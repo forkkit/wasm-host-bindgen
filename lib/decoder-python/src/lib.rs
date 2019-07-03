@@ -131,17 +131,11 @@ impl Codegen for ExportBinding {
         assert!(self.params.bindings.is_empty());
         assert!(self.result.bindings.len() == 1);
 
-        let wasm_function_id = context.get_function(context.bind.func).id();
-        let export_name = context
-            .module
-            .exports
-            .iter()
-            .find(|export| match export.item {
-                ExportItem::Function(function_id) if function_id == wasm_function_id => true,
-                _ => false,
-            })
-            .map(|export| &export.name)
-            .expect("Bound exported function is not found.");
+        let wasm_output_type = match context.get_type(self.wasm_ty).results() {
+            &[first] => Some(first),
+            &[] => return, /* The exported function returns nothing, there is nothing to bind. */
+            slice => Some(slice[0]),
+        };
 
         // Get the `type` statement that represents the Web IDL binding function.
         let webidl_output_type = match self.webidl_ty {
@@ -187,10 +181,19 @@ impl Codegen for ExportBinding {
             _ => unimplemented!(),
         };
 
-        let wasm_output_type = match context.get_type(self.wasm_ty).results() {
-            &[first] => Some(first),
-            &[] => None,
-            slice => Some(slice[0]),
+        let export_name = {
+            let wasm_function_id = context.get_function(context.bind.func).id();
+
+            context
+                .module
+                .exports
+                .iter()
+                .find(|export| match export.item {
+                    ExportItem::Function(function_id) if function_id == wasm_function_id => true,
+                    _ => false,
+                })
+                .map(|export| &export.name)
+                .expect("Bound exported function is not found.")
         };
 
         match wasm_output_type {
