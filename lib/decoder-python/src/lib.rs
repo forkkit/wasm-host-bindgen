@@ -185,20 +185,33 @@ impl Codegen for ExportBinding {
         };
 
         match wasm_output_type {
-            Some(output_type) => write!(
-                context.writer,
-                r#"
-export_{name} = |...arguments| {{
-    let output: {output_type} = original_export_{name}(arguments...);
+            Some(output_type) => {
+                write!(
+                    context.writer,
+                    r#"
+def export_{name}_builder(instance):
+    def export_{name}(*arguments):
+        # output: {output_type}
+        output = instance.exports.{name}(*arguments)
 "#,
-                name = export_name,
-                output_type = output_type
-            )
-            .unwrap(),
+                    name = export_name,
+                    output_type = output_type
+                )
+                .unwrap();
+
+                &self.result.bindings[0].codegen(context);
+
+                write!(
+                    context.writer,
+                    r#"
+    return export_{name}
+"#,
+                    name = export_name
+                )
+                .unwrap()
+            }
             _ => unimplemented!(),
         };
-
-        &self.result.bindings[0].codegen(context);
     }
 }
 
@@ -208,23 +221,32 @@ impl Codegen for OutgoingBindingExpression {
             // utf8-cstr
             OutgoingBindingExpression::Utf8CStr(OutgoingBindingExpressionUtf8CStr {
                 ty,
-                offset,
+                offset: offset_index,
             }) => match ty {
                 WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => write!(
                     context.writer,
                     r#"
-    let byte_string = ByteString::new();
-    let offset = output + {offset};
+        offset_index = {offset_index}
+        pointer = output + offset_index
 
-    match memory[offset..].position(|b| b != 0) {{
-        Some(end_offset) => ByteString::from(memory[offset..end_offset]),
-        None => ByteString::from(memory[offset..]),
-    }}
+        memory = instance.memory.uint8_view(pointer)
+        memory_length = len(memory)
 
-    byte_string
-}}
+        bytes = []
+        nth = 0
+
+        while nth < memory_length:
+            byte = memory[nth]
+
+            if byte == 0:
+                break
+
+            bytes.append(byte)
+            nth += 1
+
+        return bytestring(bytes)
 "#,
-                    offset = offset
+                    offset_index = offset_index
                 )
                 .unwrap(),
 
