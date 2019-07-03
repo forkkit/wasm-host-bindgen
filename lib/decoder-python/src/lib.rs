@@ -132,9 +132,9 @@ impl Codegen for ExportBinding {
         assert!(self.result.bindings.len() == 1);
 
         let wasm_output_type = match context.get_type(self.wasm_ty).results() {
-            &[first] => Some(first),
+            &[first] => first,
             &[] => return, /* The exported function returns nothing, there is nothing to bind. */
-            slice => Some(slice[0]),
+            slice => slice[0],
         };
 
         // Get the `type` statement that represents the Web IDL binding function.
@@ -196,36 +196,31 @@ impl Codegen for ExportBinding {
                 .expect("Bound exported function is not found.")
         };
 
-        match wasm_output_type {
-            Some(output_type) => {
-                write!(
-                    context.writer,
-                    r#"
+        write!(
+            context.writer,
+            r#"
 def export_{name}_builder(instance):
     def export_{name}(*arguments):
         # output: {output_type}
         output = instance.exports.{name}(*arguments)
 "#,
-                    name = export_name,
-                    output_type = output_type
-                )
-                .unwrap();
+            name = export_name,
+            output_type = wasm_output_type
+        )
+        .unwrap();
 
-                &self.result.bindings[0].codegen(context);
+        &self.result.bindings[0].codegen(context);
 
-                write!(
-                    context.writer,
-                    r#"
+        write!(
+            context.writer,
+            r#"
     return export_{name}
 
 export_builders['{name}'] = export_{name}_builder
 "#,
-                    name = export_name
-                )
-                .unwrap()
-            }
-            _ => unimplemented!(),
-        };
+            name = export_name
+        )
+        .unwrap();
     }
 }
 
