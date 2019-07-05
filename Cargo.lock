@@ -890,6 +890,17 @@ dependencies = [
 [[package]]
 name = "wasm-webidl-bindings"
 version = "0.1.0"
+source = "git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr#f9cec8179bfcf37819c0bbe51701854ad3321efc"
+dependencies = [
+ "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "id-arena 2.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "leb128 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
+ "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "wasm-webidl-bindings"
+version = "0.1.0"
 source = "git+https://github.com/rustwasm/wasm-webidl-bindings#84e58be6c0e65949f091a47f8523dfc90d6a5413"
 dependencies = [
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -927,7 +938,7 @@ name = "wasm-xbindgen-decoder-common"
 version = "0.0.1"
 dependencies = [
  "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "wasm-webidl-bindings 0.1.0 (git+https://github.com/rustwasm/wasm-webidl-bindings)",
+ "wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)",
 ]
 
 [[package]]
@@ -1080,6 +1091,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "9b751c638c5c86d92af28a3a68ce879b719c7e1cad75c66a3377ce386b9d705f"
 "checksum walrus-macro 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "fa6d170993592c1c44d459df6449848c7b645ee99e7a05a93da6e49e8777564d"
 "checksum walrus-macro 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "30dcc194dbffb8025ca1b42a92f8c33ac28b1025cd771f0d884f89508b5fb094"
+"checksum wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)" = "<none>"
 "checksum wasm-webidl-bindings 0.1.0 (git+https://github.com/rustwasm/wasm-webidl-bindings)" = "<none>"
 "checksum wasm-webidl-bindings-text-parser 0.1.0 (git+https://github.com/rustwasm/wasm-webidl-bindings)" = "<none>"
 "checksum wasmparser 0.30.0 (registry+https://github.com/rust-lang/crates.io-index)" = "566a9eefa2267a1a32af59807326e84191cdff41c3fc2efda0a790d821615b31"
