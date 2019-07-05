@@ -8,8 +8,8 @@ use wasm_xbindgen_decoder_common::{
     walrus::{ExportItem, Function, FunctionId, FunctionKind, LocalFunction, Module, Type, TypeId},
     wasm_webidl_bindings::ast::{
         Bind, ExportBinding, FunctionBindingId, FunctionBindings, ImportBinding,
-        OutgoingBindingExpression, OutgoingBindingExpressionUtf8Str, WebidlBindings,
-        WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
+        OutgoingBindingExpression, OutgoingBindingExpressionCopy, OutgoingBindingExpressionUtf8Str,
+        WebidlBindings, WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
     },
 };
 
@@ -171,6 +171,13 @@ impl Codegen for ExportBinding {
                     ty: right_type,
                     ..
                 }),
+            )
+            | (
+                Some(left_type),
+                OutgoingBindingExpression::Copy(OutgoingBindingExpressionCopy {
+                    ty: right_type,
+                    ..
+                }),
             ) => {
                 if left_type != right_type {
                     panic!(format!("Type mimatch between `type` and `func-binding`: `{left:?}` is not equal to `{right:?}`", left = left_type, right = right_type));
@@ -230,6 +237,32 @@ impl Codegen for OutgoingBindingExpression {
                 offset: offset_index,
                 length: length_index,
             }) => match ty {
+                WebidlTypeRef::Scalar(WebidlScalarType::DomString) => writeln!(
+                    context.writer,
+                    r#"
+        pointer = output
+        offset_index = {offset_index}
+        length_index = {length_index}
+
+        memory = instance.memory.uint8_view(pointer)
+        offset = memory[pointer + offset_index]
+        length = memory[pointer + length_index]
+
+        return domstring(memory[offset : offset + length])"#,
+                    offset_index = offset_index,
+                    length_index = length_index,
+                )
+                .unwrap(),
+
+                _ => unimplemented!("outgoing binding expression type not supported"),
+            },
+
+            // copy
+            OutgoingBindingExpression::Copy(OutgoingBindingExpressionCopy {
+                ty,
+                offset: offset_index,
+                length: length_index,
+            }) => match ty {
                 WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => writeln!(
                     context.writer,
                     r#"
@@ -247,10 +280,10 @@ impl Codegen for OutgoingBindingExpression {
                 )
                 .unwrap(),
 
-                _ => unimplemented!(),
+                _ => unimplemented!("outgoing binding expression type not supported"),
             },
 
-            _ => unimplemented!(),
+            _ => unimplemented!("outgoing binding expression not supported"),
         };
     }
 }

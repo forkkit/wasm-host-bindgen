@@ -5,5 +5,5 @@ authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
 edition = "2018"
 
 [dependencies]
-wasm-webidl-bindings = { git = "https://github.com/rustwasm/wasm-webidl-bindings", features = [ "text" ] }
+wasm-webidl-bindings = { git = "https://github.com/Hywan/wasm-webidl-bindings", branch = "feat-remove-utf8-cstr", features = [ "text" ] }
 walrus = "0.8.0"

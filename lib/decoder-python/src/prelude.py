@@ -1,7 +1,10 @@
 # prelude
 
 def bytestring(byte_list):
-    return bytes(byte_list).decode()
+    return bytes(byte_list)
+
+def domstring(byte_list):
+    return bytes(byte_list).decode('utf_8', 'strict')
 
 def bind_exports(instance, builders=None):
     class Exports:
