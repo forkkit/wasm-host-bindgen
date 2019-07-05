@@ -23,8 +23,8 @@ fn main() -> Result<(), &'static str> {
 
         Commands::Encode(command) => {
             let options = command.into();
-            println!("{:#?}", options);
             encode(&options)?;
+            println!("{:?}", &options.output_file);
         }
     }
 
