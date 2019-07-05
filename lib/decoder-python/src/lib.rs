@@ -8,7 +8,7 @@ use wasm_xbindgen_decoder_common::{
     walrus::{ExportItem, Function, FunctionId, FunctionKind, LocalFunction, Module, Type, TypeId},
     wasm_webidl_bindings::ast::{
         Bind, ExportBinding, FunctionBindingId, FunctionBindings, ImportBinding,
-        OutgoingBindingExpression, OutgoingBindingExpressionUtf8CStr, WebidlBindings,
+        OutgoingBindingExpression, OutgoingBindingExpressionUtf8Str, WebidlBindings,
         WebidlFunction, WebidlScalarType, WebidlTypeId, WebidlTypeRef, WebidlTypes,
     },
 };
@@ -167,7 +167,7 @@ impl Codegen for ExportBinding {
         match (webidl_output_type, &self.result.bindings[0]) {
             (
                 Some(left_type),
-                OutgoingBindingExpression::Utf8CStr(OutgoingBindingExpressionUtf8CStr {
+                OutgoingBindingExpression::Utf8Str(OutgoingBindingExpressionUtf8Str {
                     ty: right_type,
                     ..
                 }),
@@ -203,7 +203,7 @@ def export_{name}_builder(instance):
         # output: {output_type}
         output = instance.exports.{name}(*arguments)"#,
             name = export_name,
-            output_type = wasm_output_type
+            output_type = wasm_output_type,
         )
         .unwrap();
 
@@ -215,7 +215,7 @@ def export_{name}_builder(instance):
     return export_{name}
 
 export_builders['{name}'] = export_{name}_builder"#,
-            name = export_name
+            name = export_name,
         )
         .unwrap();
     }
@@ -224,34 +224,26 @@ export_builders['{name}'] = export_{name}_builder"#,
 impl Codegen for OutgoingBindingExpression {
     fn codegen(&self, context: &mut CodegenContext) {
         match self {
-            // utf8-cstr
-            OutgoingBindingExpression::Utf8CStr(OutgoingBindingExpressionUtf8CStr {
+            // utf8-str
+            OutgoingBindingExpression::Utf8Str(OutgoingBindingExpressionUtf8Str {
                 ty,
                 offset: offset_index,
+                length: length_index,
             }) => match ty {
                 WebidlTypeRef::Scalar(WebidlScalarType::ByteString) => writeln!(
                     context.writer,
                     r#"
+        pointer = output
         offset_index = {offset_index}
-        pointer = output + offset_index
+        length_index = {length_index}
 
         memory = instance.memory.uint8_view(pointer)
-        memory_length = len(memory)
+        offset = memory[pointer + offset_index]
+        length = memory[pointer + length_index]
 
-        bytes = []
-        nth = 0
-
-        while nth < memory_length:
-            byte = memory[nth]
-
-            if byte == 0:
-                break
-
-            bytes.append(byte)
-            nth += 1
-
-        return bytestring(bytes)"#,
-                    offset_index = offset_index
+        return bytestring(memory[offset : offset + length])"#,
+                    offset_index = offset_index,
+                    length_index = length_index,
                 )
                 .unwrap(),
 
