@@ -136,10 +136,10 @@ expression_ and shows their respective implementation status:
 | Target | Operator | Status | Details |
 |-|-|-|-|
 | 🐍 | `as` | not implemented | |
-| 🐍 | `utf8-str` | implemented | ~`DOMString`~, ~`USVString`~, `ByteString` |
+| 🐍 | `utf8-str` | partially implemented | `DOMString`, ~`USVString`~ |
 | 🐍 | `i32-to-enum` | not implemented |
 | 🐍 | `view` | not implemented |
-| 🐍 | `copy` | not implemented |
+| 🐍 | `copy` | partially implemented | `ByteString`, ~`BufferSource`~ |
 | 🐍 | `dict` | not implemented |
 | 🐍 | `bind-export` | not implemented |
 
