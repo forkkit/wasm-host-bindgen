@@ -44,7 +44,7 @@ impl Module {
                             None
                         }
                     })
-                    .unwrap();
+                    .expect("No Web IDL bindings custom section in this WebAssembly module.");
 
                 let data = section.data(&Default::default());
                 let bindings = decode(indices_to_ids, &data).unwrap();
