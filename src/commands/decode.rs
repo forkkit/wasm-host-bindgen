@@ -9,6 +9,13 @@ arg_enum! {
     }
 }
 
+arg_enum! {
+    #[derive(PartialEq, Debug)]
+    pub enum Emit {
+        Ast,
+    }
+}
+
 #[derive(StructOpt, Debug)]
 pub struct Decode {
     /// The WebAssembly module (`.wasm` file) containing the bindings.
@@ -23,6 +30,10 @@ pub struct Decode {
         case_insensitive = true
     )]
     target: Target,
+
+    /// Type of output to emit.
+    #[structopt(short = "e", long = "emit")]
+    emit: Option<Emit>,
 
     /// Generates the prelude, i.e. the Web IDL types for the target.
     #[structopt(short = "p", long = "prelude")]
@@ -45,11 +56,23 @@ impl Into<common::options::Target> for Target {
     }
 }
 
+impl Into<common::options::Emit> for Emit {
+    fn into(self) -> common::options::Emit {
+        match self {
+            Emit::Ast => common::options::Emit::Ast,
+        }
+    }
+}
+
 impl Into<common::options::Options> for Decode {
     fn into(self) -> common::options::Options {
         common::options::Options::new(
             self.webassembly_module_file,
             self.target.into(),
+            match self.emit {
+                Some(emit) => Some(emit.into()),
+                None => None,
+            },
             self.prelude,
             self.verbose,
             self.output,
