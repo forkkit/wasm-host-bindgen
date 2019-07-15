@@ -1,3 +1,4 @@
 *.wasm
+*.emit.*
 __pycache__/
 hello_world_bindings.py
