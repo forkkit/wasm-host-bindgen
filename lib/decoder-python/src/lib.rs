@@ -5,7 +5,7 @@ use wasm_host_bindgen_decoder_common::{
     self as common,
     module::Module as CommonModule,
     options::Options,
-    walrus::{ExportItem, Function, FunctionId, FunctionKind, LocalFunction, Module, Type, TypeId},
+    walrus::{ExportItem, Function, FunctionId, FunctionKind, Module, Type, TypeId},
     wasm_webidl_bindings::ast::{
         Bind, ExportBinding, FunctionBindingId, FunctionBindings, ImportBinding,
         OutgoingBindingExpression, OutgoingBindingExpressionCopy, OutgoingBindingExpressionUtf8Str,
@@ -83,20 +83,14 @@ impl Codegen for Bind {
         let wasm_function = context.get_function(self.func);
 
         // Is it a binding to an export, and is the Wasm function an export?
-        if let (
-            Some(export_binding),
-            FunctionKind::Local(LocalFunction {
-                ty: exported_function_type_id,
-                ..
-            }),
-        ) = (
+        if let (Some(export_binding), FunctionKind::Local(local_function)) = (
             context
                 .bindings
                 .get::<ExportBinding>(ExportBinding::wrap(self.binding)),
             &wasm_function.kind,
         ) {
             let export_binding_wasm_type = context.get_type(export_binding.wasm_ty);
-            let exported_function_type = module.types.get(*exported_function_type_id);
+            let exported_function_type = module.types.get(local_function.ty());
 
             if export_binding_wasm_type != exported_function_type {
                 panic!(

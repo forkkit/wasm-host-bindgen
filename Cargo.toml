@@ -5,7 +5,7 @@ authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
 edition = "2018"
 
 [dependencies]
-structopt = "0.2.16"
+structopt = "0.2.18"
 wasm-host-bindgen-decoder-common = { path = "lib/decoder-common" }
 wasm-host-bindgen-decoder-python = { path = "lib/decoder-python" }
 wasm-host-bindgen-encoder = { path = "lib/encoder" }
