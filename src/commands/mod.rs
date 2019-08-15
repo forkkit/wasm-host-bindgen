@@ -9,7 +9,7 @@ use structopt::StructOpt;
 /// encode bindings into a WebAssembly module, or to decode
 /// WebAssembly bindings into multiple targets.
 #[derive(StructOpt, Debug)]
-#[structopt(name = "wasm-xbindgen")]
+#[structopt(name = "wasm-host-bindgen")]
 pub enum Commands {
     /// Decode WebAssembly bindings to multiple targets.
     #[structopt(name = "decode")]

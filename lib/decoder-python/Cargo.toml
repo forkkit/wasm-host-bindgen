@@ -1,8 +1,8 @@
 [package]
-name = "wasm-xbindgen-decoder-python"
+name = "wasm-host-bindgen-decoder-python"
 version = "0.0.1"
 authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
 edition = "2018"
 
 [dependencies]
-wasm-xbindgen-decoder-common = { path = "../decoder-common" }
+wasm-host-bindgen-decoder-common = { path = "../decoder-common" }

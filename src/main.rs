@@ -5,13 +5,13 @@ mod commands;
 use commands::Commands;
 use std::{fs::File, io::prelude::*};
 use structopt::StructOpt;
-use wasm_xbindgen_decoder_common::{
+use wasm_host_bindgen_decoder_common::{
     decode,
     module::Module,
     options::{Emit, Options as DecoderOptions, Target},
 };
-use wasm_xbindgen_decoder_python as python;
-use wasm_xbindgen_encoder::encode;
+use wasm_host_bindgen_decoder_python as python;
+use wasm_host_bindgen_encoder::encode;
 
 fn main() -> Result<(), &'static str> {
     match Commands::from_args() {
