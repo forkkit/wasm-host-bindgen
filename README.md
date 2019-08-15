@@ -52,7 +52,9 @@ The current state is:
     integrations][wasmer-language-integrations]: They are closed to
     the Web standard. The next iteration must obviously provide
     runtime-agnostic interfaces or standards to support
-    WebAssembly. This is another project to run apart from this one.
+    WebAssembly. This is another project to run apart from this
+    one. See the [Proposal: Non-Web Embedder
+    APIs][non-web-embedder-apis] discussion.
     
 Consequently, to use `wasm-host-bindgen`, one has to:
 
@@ -67,6 +69,7 @@ Consequently, to use `wasm-host-bindgen`, one has to:
 [binary-representation]: https://github.com/rustwasm/wasm-webidl-bindings/blob/master/BINARY.md
 [rustwasm]: https://github.com/rustwasm/
 [wasmer-language-integrations]: https://github.com/wasmerio?utf8=%E2%9C%93&q=-ext-wasm&type=public&language=
+[non-web-embedder-apis]: https://github.com/WebAssembly/design/issues/1290
 
 ## Example
 
