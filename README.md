@@ -42,7 +42,7 @@ The current state is:
     as it is part of the Web platform, and this platform is tightly
     based on Web IDL. This isn't the case for other non-Web
     hosts. Consequently, a _prelude_ must be generated too in order to
-    bind Web IDL API to the host API (hint: this is the `--prelude`
+    bind Web IDL API to the host API (hint: this is the `--with-prelude`
     option),
     
   - Only the Web has a standard WebAssembly API. No other host has
@@ -92,7 +92,7 @@ $ # Decoding targets Python.
 $ ./target/debug/wasm-host-bindgen \
       decode \
           --target python \
-          --prelude \
+          --with-prelude \
           --output examples/hello_world_bindings.py \
           examples/hello_world.bound.wasm
 

@@ -36,7 +36,7 @@ pub struct Decode {
     emit: Option<Emit>,
 
     /// Generates the prelude, i.e. the Web IDL types for the target.
-    #[structopt(short = "p", long = "prelude")]
+    #[structopt(short = "p", long = "with-prelude")]
     prelude: bool,
 
     /// Uses verbose output.
