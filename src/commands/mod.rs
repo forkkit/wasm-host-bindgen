@@ -5,8 +5,8 @@ pub(crate) mod encode;
 
 use structopt::StructOpt;
 
-/// WebAssembly bindings toolkit (`wasm-xbinden`) is a set of tool to
-/// encode bindings into a WebAssembly module, or to decode
+/// WebAssembly bindings toolkit (`wasm-host-bindgen`) is a set of
+/// tool to encode bindings into a WebAssembly module, or to decode
 /// WebAssembly bindings into multiple targets.
 #[derive(StructOpt, Debug)]
 #[structopt(name = "wasm-host-bindgen")]
