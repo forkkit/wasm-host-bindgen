@@ -1,4 +1,4 @@
-# wasm-xbindgen
+# wasm-host-bindgen
 
 This is an experimental tool to support [WebAssembly Web IDL
 Bindings][web-idl-bindings]. The specification is still a draft, but
@@ -31,7 +31,7 @@ The current state is:
      WebAssembly module. Thus we have to simulate that feature and to
      support an _encoding_ step to transform Web IDL Bindings into its
      binary representation, and to inject it into the WebAssembly module
-     custom section (hint: this is the `wasm-xbindgen encode`
+     custom section (hint: this is the `wasm-host-bindgen encode`
      command),
      
   - The binary representation isn't defined yet. [@rustwasm][rustwasm]
@@ -54,14 +54,14 @@ The current state is:
     runtime-agnostic interfaces or standards to support
     WebAssembly. This is another project to run apart from this one.
     
-Consequently, to use `wasm-xbindgen`, one has to:
+Consequently, to use `wasm-host-bindgen`, one has to:
 
   1. [not necessary in the future] Write Web IDL Bindings by hand,
 
   2. [not necessary in the future] Encode the bindings into a
-     WebAssembly module with `wasm-xbindgen encode`,
+     WebAssembly module with `wasm-host-bindgen encode`,
 
-  3. Decode the bindings for a specific host with `wasm-xbindgen decode --target <host>`.
+  3. Decode the bindings for a specific host with `wasm-host-bindgen decode --target <host>`.
 
 [web-idl-bindings]: https://github.com/WebAssembly/webidl-bindings
 [binary-representation]: https://github.com/rustwasm/wasm-webidl-bindings/blob/master/BINARY.md
@@ -74,7 +74,7 @@ Consequently, to use `wasm-xbindgen`, one has to:
 $ # Compile the `.wat` file to a `.wasm` binary module.
 $ wat2wasm examples/hello_world.wat -o examples/hello_world.wasm
 
-$ # Compile `wasm-xbindgen`.
+$ # Compile `wasm-host-bindgen`.
 $ cargo build
 
 $ # Insert/Encode the Web IDL bindings into the `.wasm` binary module.
@@ -82,14 +82,14 @@ $ # Usually, this step isn't necessary. It aims to be done by a
 $ # compiler (e.g. `rustc`). However, right now, the WebAssembly Web IDL
 $ # Bindings specification and toolchain are early drafts, making this step
 $ # necessary.
-$ ./target/debug/wasm-xbindgen \
+$ ./target/debug/wasm-host-bindgen \
       encode \
           examples/hello_world.wasm \
           examples/hello_world.webidl
 
 $ # Decode the Web IDL bindings (that are stored inside the WebAssembly binary module).
 $ # Decoding targets Python.
-$ ./target/debug/wasm-xbindgen \
+$ ./target/debug/wasm-host-bindgen \
       decode \
           --target python \
           --prelude \

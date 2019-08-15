@@ -1,14 +1,14 @@
 [package]
-name = "wasm-xbindgen"
+name = "wasm-host-bindgen"
 version = "0.0.1"
 authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
 edition = "2018"
 
 [dependencies]
 structopt = "0.2.16"
-wasm-xbindgen-decoder-common = { path = "lib/decoder-common" }
-wasm-xbindgen-decoder-python = { path = "lib/decoder-python" }
-wasm-xbindgen-encoder = { path = "lib/encoder" }
+wasm-host-bindgen-decoder-common = { path = "lib/decoder-common" }
+wasm-host-bindgen-decoder-python = { path = "lib/decoder-python" }
+wasm-host-bindgen-encoder = { path = "lib/encoder" }
 
 [workspace]
 members = [

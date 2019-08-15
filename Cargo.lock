@@ -888,6 +888,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "wasm-host-bindgen"
+version = "0.0.1"
+dependencies = [
+ "structopt 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wasm-host-bindgen-decoder-common 0.0.1",
+ "wasm-host-bindgen-decoder-python 0.0.1",
+ "wasm-host-bindgen-encoder 0.0.1",
+]
+
+[[package]]
+name = "wasm-host-bindgen-decoder-common"
+version = "0.0.1"
+dependencies = [
+ "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)",
+]
+
+[[package]]
+name = "wasm-host-bindgen-decoder-python"
+version = "0.0.1"
+dependencies = [
+ "wasm-host-bindgen-decoder-common 0.0.1",
+]
+
+[[package]]
+name = "wasm-host-bindgen-encoder"
+version = "0.0.1"
+dependencies = [
+ "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)",
+]
+
+[[package]]
 name = "wasm-webidl-bindings"
 version = "0.1.0"
 source = "git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr#f71d4967323373947fe68086e7bd4b3e3d9f5acc"
@@ -910,39 +943,6 @@ dependencies = [
  "leb128 0.2.4 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 1.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "walrus 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "wasm-xbindgen"
-version = "0.0.1"
-dependencies = [
- "structopt 0.2.18 (registry+https://github.com/rust-lang/crates.io-index)",
- "wasm-xbindgen-decoder-common 0.0.1",
- "wasm-xbindgen-decoder-python 0.0.1",
- "wasm-xbindgen-encoder 0.0.1",
-]
-
-[[package]]
-name = "wasm-xbindgen-decoder-common"
-version = "0.0.1"
-dependencies = [
- "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)",
-]
-
-[[package]]
-name = "wasm-xbindgen-decoder-python"
-version = "0.0.1"
-dependencies = [
- "wasm-xbindgen-decoder-common 0.0.1",
-]
-
-[[package]]
-name = "wasm-xbindgen-encoder"
-version = "0.0.1"
-dependencies = [
- "walrus 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "wasm-webidl-bindings 0.1.0 (git+https://github.com/Hywan/wasm-webidl-bindings?branch=feat-remove-utf8-cstr)",
 ]
 
 [[package]]

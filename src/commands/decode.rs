@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use structopt::{clap::arg_enum, StructOpt};
-use wasm_xbindgen_decoder_common as common;
+use wasm_host_bindgen_decoder_common as common;
 
 arg_enum! {
     #[derive(PartialEq, Debug)]

@@ -1,7 +1,7 @@
 //#![deny(warnings)]
 
 use std::{fs::File, io::Write};
-use wasm_xbindgen_decoder_common::{
+use wasm_host_bindgen_decoder_common::{
     self as common,
     module::Module as CommonModule,
     options::Options,

@@ -1,5 +1,5 @@
 [package]
-name = "wasm-xbindgen-decoder-common"
+name = "wasm-host-bindgen-decoder-common"
 version = "0.0.1"
 authors = ["Ivan Enderlin <ivan.enderlin@hoa-project.net>"]
 edition = "2018"

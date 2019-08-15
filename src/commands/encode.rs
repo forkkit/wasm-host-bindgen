@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 use structopt::StructOpt;
-use wasm_xbindgen_encoder as encoder;
+use wasm_host_bindgen_encoder as encoder;
 
 #[derive(StructOpt, Debug)]
 pub struct Encode {
